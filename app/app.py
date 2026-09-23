@@ -13,10 +13,17 @@ from pathlib import Path
 
 import streamlit as st
 
-# Permite ejecutar `streamlit run app/app.py` resolviendo imports desde la raíz.
-REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+# `streamlit run app/app.py` coloca la carpeta app/ en sys.path[0] y registra el
+# script como el módulo `app`, por lo que `import app` resolvería al script (sin
+# __path__) en vez del paquete app/. Forzamos la raíz del repo al frente de
+# sys.path y limpiamos ese alias para que los imports `app.*` resuelvan al paquete.
+REPO_ROOT = str(Path(__file__).resolve().parent.parent)
+if REPO_ROOT in sys.path:
+    sys.path.remove(REPO_ROOT)
+sys.path.insert(0, REPO_ROOT)
+_app_alias = sys.modules.get("app")
+if _app_alias is not None and not hasattr(_app_alias, "__path__"):
+    del sys.modules["app"]
 
 from app.components import sections  # noqa: E402
 from app.utils import data  # noqa: E402
