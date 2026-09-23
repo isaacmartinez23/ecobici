@@ -167,14 +167,14 @@ ecobici/
 ├── common/         # config, db+schema.sql, http, timeutils, geo, logging
 ├── config/         # settings.yaml, station_aliases.csv
 ├── data/           # raw/ interim/ processed/ manifests/ sample/ (crudos ignorados)
-├── docs/           # architecture, data_dictionary, decisions, limitations
+├── docs/           # architecture, data_dictionary, decisions, limitations, especificacion
 ├── ingest/         # scrape, download, collect_gbfs, load_raw/load_sample
 ├── models/         # baseline, train, evaluate, predict, rebalance, metrics
 ├── reports/        # métricas, figuras, memo.md
 ├── transform/      # normalize, bridge, *.sql, aggregations, features
 ├── tests/          # pytest (ingestión, normalización, calidad, features, bridge, rebalance)
 ├── run_pipeline.py # orquestador (muestra por defecto; --full para datos reales)
-├── Makefile  pyproject.toml  requirements*.txt  .github/workflows/
+├── LICENSE  Makefile  pyproject.toml  requirements*.txt  .github/workflows/
 ```
 
 ## Diccionario de datos
@@ -193,6 +193,23 @@ en [`common/schema.sql`](common/schema.sql).
 - Una **predicción no garantiza disponibilidad futura**.
 - El modelo **no incorpora** tráfico, clima, costo de traslado ni restricciones
   operativas completas, salvo que existan datos reales para ello.
+
+## Licencia y atribución de datos
+
+Este proyecto se distribuye bajo licencia **MIT** (ver [`LICENSE`](LICENSE)).
+
+**Datos**: el repositorio **no** redistribuye datos de ECOBICI. Solo incluye los
+*scripts* que los descargan y **datos de muestra sintéticos** generados localmente
+(`data/sample/`). Las fuentes originales y sus términos pertenecen a sus
+responsables:
+
+- Histórico de viajes: [Datos abiertos de ECOBICI — Gobierno de la CDMX](https://ecobici.cdmx.gob.mx/en/open-data/).
+- Disponibilidad en tiempo real: feed **GBFS** de ECOBICI (operado por Lyft),
+  `https://gbfs.mex.lyftbikes.com/gbfs/gbfs.json`.
+
+Al descargar y publicar datos derivados, respeta los términos de uso de cada
+fuente. La especificación original del proyecto está en
+[`docs/especificacion.md`](docs/especificacion.md).
 
 ## Próximos pasos
 

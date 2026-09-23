@@ -1,3 +1,10 @@
+> **Nota**: Este documento es la _especificación original_ del proyecto: el
+> enunciado que definió el alcance, la arquitectura y los criterios de
+> aceptación. Se conserva como referencia. La documentación viva del proyecto
+> está en el [README](../README.md) y en el resto de `docs/`.
+
+---
+
 Actúa como un Data Engineer y Data Scientist senior especializado en Python, DuckDB, series temporales, datos geoespaciales y aplicaciones de datos con Streamlit.
 
 Tu tarea es construir, probar y documentar de principio a fin un proyecto de portafolio llamado:
