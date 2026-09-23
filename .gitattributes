@@ -1,0 +1,8 @@
+# Normaliza saltos de línea a LF para consistencia entre Windows y CI (Linux).
+* text=auto eol=lf
+
+# Binarios: sin conversión.
+*.png binary
+*.parquet binary
+*.duckdb binary
+*.joblib binary

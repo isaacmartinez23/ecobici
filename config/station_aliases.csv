@@ -1,0 +1,7 @@
+historico_id,gbfs_id,nombre_referencia,nota
+# Archivo manual de excepciones para el puente de estaciones.
+# Cada fila fuerza un emparejamiento historico_id <-> gbfs_id que el
+# algoritmo automatico no debe sobreescribir.
+# Deja el archivo con solo el encabezado si no hay excepciones.
+# Ejemplo (comentado):
+# 27,ecobici_cdmx_027,"Reforma - Insurgentes","IDs divergen por renumeracion 2022"

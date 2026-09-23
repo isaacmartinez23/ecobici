@@ -1,0 +1,54 @@
+# --- Entornos y credenciales ---
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- Bases de datos DuckDB (se reconstruyen) ---
+*.duckdb
+*.duckdb.wal
+data/ecobici.duckdb
+
+# --- Datos crudos e intermedios (no versionar; se descargan/derivan) ---
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Los manifiestos SÍ se versionan (sin datos sensibles), excepto archivos temporales
+data/manifests/*.tmp
+
+# --- Modelos y resultados pesados (se regeneran) ---
+models/artifacts/
+reports/figures/*.png
+reports/figures/*.html
+!reports/figures/.gitkeep
+
+# Reportes generados por el pipeline (regenerables). El memo (memo.md) sí se versiona.
+reports/*.csv
+reports/*.json
+
+# --- Datos de muestra: SÍ se versionan (pequeños y deterministas) ---
+!data/sample/**
+
+# --- Sistema operativo / editores ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

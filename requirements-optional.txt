@@ -1,0 +1,5 @@
+# Dependencias opcionales. El pipeline funciona sin ellas (usa alternativas
+# basadas en scikit-learn y cálculos de distancia con haversine puro).
+lightgbm>=4.0   # modelo de gradient boosting; si no instala, se usa HistGradientBoosting de sklearn
+geopandas>=0.14 # operaciones espaciales; si no instala, se usa haversine puro en common/geo.py
+pre-commit>=3.5

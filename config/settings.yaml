@@ -1,0 +1,84 @@
+# Configuración central del proyecto ECOBICI.
+# Puede sobreescribirse con variables de entorno (ver common/config.py y .env.example).
+
+project:
+  name: "ecobici-demanda"
+  timezone: "America/Mexico_City"
+  random_seed: 42
+
+paths:
+  duckdb: "data/ecobici.duckdb"
+  raw: "data/raw"
+  interim: "data/interim"
+  processed: "data/processed"
+  manifests: "data/manifests"
+  sample: "data/sample"
+  reports: "reports"
+  figures: "reports/figures"
+  models_artifacts: "models/artifacts"
+
+logging:
+  level: "INFO"
+
+sources:
+  historical_open_data_url: "https://ecobici.cdmx.gob.mx/en/open-data/"
+  gbfs_discovery_url: "https://gbfs.mex.lyftbikes.com/gbfs/gbfs.json"
+  # Idioma preferido del feed GBFS (fallback al primero disponible)
+  gbfs_language: "es"
+
+ingestion:
+  http_timeout_seconds: 30
+  http_max_retries: 4
+  http_backoff_seconds: 2.0
+  user_agent: "ecobici-demanda/0.1 (+portafolio; contacto via repo)"
+  gbfs_capture_interval_minutes: 5
+
+cleaning:
+  # Reglas de descarte del histórico de viajes.
+  min_duration_minutes: 1
+  max_duration_minutes: 240
+  # Formatos de fecha probados explícitamente (orden importa).
+  # NO se incluye %m/%d/%Y a propósito: ECOBICI usa d/m/Y o Y-m-d; incluir el
+  # formato estadounidense arriesgaría intercambiar día y mes de forma silenciosa.
+  date_formats:
+    - "%d/%m/%Y"
+    - "%Y-%m-%d"
+    - "%d-%m-%Y"
+  time_formats:
+    - "%H:%M:%S"
+    - "%H:%M"
+    - "%H:%M:%S.%f"
+
+station_bridge:
+  # Umbral de distancia (metros) para aceptar emparejamiento geográfico.
+  max_match_distance_m: 120.0
+  # Umbral de similitud de nombre (0-1) para emparejamiento aproximado.
+  min_name_similarity: 0.82
+
+features:
+  # Ventanas (en horas) para rezagos y medias móviles.
+  lag_hours: [1, 2, 24, 168]
+  rolling_windows_hours: [3, 24, 168]
+
+model:
+  # Objetivo principal a predecir por estación-hora.
+  target: "salidas"
+  # Cuantos periodos (horas) hacia adelante se predice.
+  horizon_hours: 1
+  # Fracción temporal para validación/prueba (se recalcula con fechas reales).
+  test_periods: 1
+  validation_periods: 1
+
+rebalance:
+  # Nivel mínimo de seguridad como fracción de la capacidad.
+  safety_stock_fraction: 0.15
+  # Objetivo de llenado tras rebalanceo (fracción de capacidad).
+  target_fill_fraction: 0.5
+  # Distancia máxima (metros) para emparejar donante-receptora.
+  max_pair_distance_m: 1500.0
+  # Máximo de bicicletas por movimiento individual.
+  max_bikes_per_move: 20
+
+app:
+  title: "ECOBICI: dónde faltan bicicletas y a qué hora"
+  default_risk_threshold: 0.5

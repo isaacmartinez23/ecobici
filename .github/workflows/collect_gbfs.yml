@@ -1,0 +1,71 @@
+name: Colector GBFS
+
+# GitHub Actions NO garantiza precisión exacta de 5 minutos (los crons se
+# encolan y pueden retrasarse bajo carga) y los runners son EFÍMEROS: su sistema
+# de archivos se descarta al terminar. Por eso no se confía en el filesystem del
+# runner para conservar historia. La estrategia por defecto exporta cada captura
+# como artefacto (retención limitada). Para historia durable, usa una de las
+# alternativas documentadas al pie de este archivo.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # cada 5 min (aproximado, no garantizado)
+  workflow_dispatch:          # ejecución manual
+
+concurrency:
+  group: gbfs-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias mínimas del colector
+        run: |
+          python -m pip install --upgrade pip
+          pip install duckdb pandas pyarrow requests beautifulsoup4 pyyaml python-dateutil
+
+      - name: Capturar disponibilidad GBFS
+        run: python -m ingest.collect_gbfs
+
+      - name: Exportar captura a Parquet
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from common.db import get_connection
+          con = get_connection()
+          df = con.execute("SELECT * FROM station_status").df()
+          con.close()
+          out = Path("data/processed")
+          out.mkdir(parents=True, exist_ok=True)
+          stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+          path = out / f"station_status_{stamp}.parquet"
+          df.to_parquet(path, index=False)
+          print(f"Exportadas {len(df)} filas a {path}")
+          PY
+
+      - name: Subir captura como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbfs-snapshot-${{ github.run_id }}
+          path: data/processed/station_status_*.parquet
+          retention-days: 30
+
+# --- Estrategias de persistencia (configurables) -----------------------------
+# 1) Artefactos (por defecto): simple, sin secretos; retención limitada (30 días
+#    aquí). Adecuado para demostración; NO para historia larga.
+# 2) Bucket S3/GCS: exportar el Parquet con `aws s3 cp` usando secretos del repo
+#    (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, GBFS_S3_BUCKET). Durable y barato.
+# 3) Base gestionada (Postgres/MotherDuck): insertar `station_status` en un
+#    destino externo con una cadena de conexión guardada como secreto.
+# 4) Rama de datos: hacer commit de los Parquet a una rama `data/` dedicada.
+#    Funciona, pero infla el repositorio con el tiempo.
+# NUNCA subir secretos al repositorio; usar GitHub Secrets.
