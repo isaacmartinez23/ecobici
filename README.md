@@ -1,8 +1,13 @@
 # ECOBICI: dónde faltan bicicletas y a qué hora
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ecobici-bjwzsw9juhdpbjl6ht2xbt.streamlit.app/)
 [![CI](https://github.com/isaacmartinez23/ecobici/actions/workflows/ci.yml/badge.svg)](https://github.com/isaacmartinez23/ecobici/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
+
+**▶️ Demo en vivo**: <https://ecobici-bjwzsw9juhdpbjl6ht2xbt.streamlit.app/>
+(usa datos de muestra sintéticos; las cifras reales de jul–sep 2026 están en
+[`reports/memo.md`](reports/memo.md)).
 
 Sistema reproducible para responder, con datos abiertos de ECOBICI (CDMX) y el
 feed GBFS en tiempo real:
