@@ -12,11 +12,38 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from common.config import get_settings
+from common.config import REPO_ROOT, get_settings
+
+# Base de muestra prelista y versionada, usada como respaldo del demo (p. ej. en
+# Streamlit Community Cloud, donde no existe la base construida localmente).
+SAMPLE_DB = REPO_ROOT / "data" / "sample" / "ecobici_sample.duckdb"
+
+
+def _has_predictions(path: Path) -> bool:
+    """True si la base existe y tiene predicciones (build completo y legible)."""
+    if not path.exists():
+        return False
+    try:
+        with duckdb.connect(str(path), read_only=True) as con:
+            n = con.execute("SELECT COUNT(*) FROM model_predictions").fetchone()[0]
+            return int(n) > 0
+    except duckdb.Error:
+        return False
 
 
 def db_path() -> Path:
-    return get_settings().duckdb_path
+    """Base a usar: la configurada si está COMPLETA; si no, la muestra prelista.
+
+    Así la app siempre muestra algo completo: en un despliegue limpio —o con una
+    base configurada incompleta, p. ej. un build interrumpido en la nube— cae a la
+    base de muestra versionada, sin sobrescribir una base real existente.
+    """
+    configured = get_settings().duckdb_path
+    if _has_predictions(configured):
+        return configured
+    if SAMPLE_DB.exists():
+        return SAMPLE_DB
+    return configured
 
 
 def _con() -> duckdb.DuckDBPyConnection:

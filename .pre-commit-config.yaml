@@ -12,7 +12,8 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-        # 2 MB: permite los datos de muestra sintéticos (sample_station_status.csv
-        # ~1.6 MB) que se versionan a propósito; bloquea datos crudos pesados.
-        args: ["--maxkb=2048"]
+        # 8 MB: permite los datos de muestra sintéticos y la base de muestra
+        # prelista (data/sample/ecobici_sample.duckdb ~6 MB) que se versionan a
+        # propósito para el demo; sigue bloqueando datos crudos pesados.
+        args: ["--maxkb=8192"]
       - id: check-merge-conflict
