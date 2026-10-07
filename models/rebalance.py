@@ -64,6 +64,8 @@ def recommend_moves(
     s["need"] = (s["target"] - s["inv"]).clip(lower=0).round().astype(int)
     s["avail"] = (s["inv"] - s["target"]).clip(lower=0).apply(math.floor).astype(int)
     s["inv_after"] = s["inv"].copy()
+    # Donantes disponibles ANTES de emparejar (s["avail"] se agota en el bucle).
+    n_donors_initial = int((s["avail"] > 0).sum())
 
     receivers = s[s["deficit_before"] > 0].sort_values("deficit_before", ascending=False)
     moves: list[dict[str, Any]] = []
@@ -130,7 +132,7 @@ def recommend_moves(
     summary = {
         "estaciones": len(s),
         "receptoras": int((s["deficit_before"] > 0).sum()),
-        "donantes_disponibles": int((s["avail"] > 0).sum()),
+        "donantes_disponibles": n_donors_initial,
         "movimientos": len(moves_df),
         "bicis_movidas": int(moves_df["bikes_to_move"].sum()) if not moves_df.empty else 0,
         "deficit_antes": total_before,

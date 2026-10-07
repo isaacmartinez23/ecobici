@@ -18,11 +18,16 @@ documentación.
 
 ## Respuesta corta
 
-> **Pendiente de datos reales.** La infraestructura está completa y validada de
-> punta a punta con **datos de muestra sintéticos**. Para obtener conclusiones
-> reales sobre ECOBICI, descarga el histórico y ejecuta el pipeline en modo
-> `--full` (ver *Cómo reproducir*). Las cifras que muestra la app por defecto
-> provienen de datos sintéticos y **no** son afirmaciones sobre el sistema real.
+> **Con el histórico real de julio–septiembre 2026** (4.46 M viajes, 679
+> estaciones): la demanda atendida tiene picos entre semana a las **08:00** y
+> **17:00–18:00**, con estaciones de fuerte vaciado como *CE-278 Mier y Pesado–
+> Obrero Mundial* y *CE-703 Miguel Hidalgo–Calzada General Anaya*. El modelo
+> supera a la línea base en la partición de prueba (RMSE 2.745 → 2.535; sesgo
+> −0.259 → −0.010) y un rebalanceo estimado evitaría **≈22.6 %** del desabasto en
+> la ventana evaluada. Detalle y salvedades en [`reports/memo.md`](reports/memo.md).
+>
+> La app **por defecto** corre con **datos de muestra sintéticos**; para reproducir
+> estas cifras reales, descarga el histórico y usa `run_pipeline.py --full`.
 
 ## Arquitectura
 
@@ -141,15 +146,27 @@ La evaluación es **temporal** (train < val < test). Métricas: MAE, RMSE, WAPE,
 sesgo; global y por estación/hora/horas pico/estaciones top. Salidas en
 `reports/metrics_*.csv` y figuras en `reports/figures/`.
 
-> **[muestra, sintético]** MAE en prueba: línea base ≈ **0.63**, modelo ≈ **0.61**
-> salidas/hora (mejora ≈ **3.6 %**); RMSE ≈ 0.98 vs. 0.83. Con datos reales estas
-> cifras cambiarán; si el modelo no supera a la base, se reporta tal cual.
+> **Resultados reales (jul–sep 2026; prueba = 12–30 sep, n = 300,560):** MAE
+> línea base **1.534** vs. modelo **1.501**; RMSE **2.745 → 2.535** (−7.7 %);
+> WAPE 0.508 → 0.497; sesgo −0.259 → **−0.010**. El modelo gana sobre todo en RMSE
+> y sesgo (deja de subestimar). *(La corrida por defecto con datos de muestra
+> muestra otras cifras ilustrativas.)*
 
 ## Hallazgos
 
-`PENDIENTE (dato real)`. Con la muestra sintética (semilla 42, periodo
-2025-06-01 → 2025-06-29), la app genera el ranking de riesgo y los perfiles
-horarios; **no** constituyen hallazgos sobre ECOBICI real.
+Sobre el histórico real **julio–septiembre 2026** (detalle en [`reports/memo.md`](reports/memo.md)):
+
+- **4,464,138** viajes válidos; solo **0.044 %** descartado (duración fuera de rango).
+- Picos de demanda entre semana: **08:00** (~5.9 salidas/h por estación) y
+  **17:00–18:00** (~5.7); el fin de semana cae ~30 %.
+- Mayor presión de vaciado (flujo neto más negativo): *CE-278 Mier y Pesado–
+  Obrero Mundial*, *CE-703 Miguel Hidalgo–Calzada General Anaya*, entre otras.
+- Puente de estaciones: **79 %** de estaciones y **54.7 %** de viajes cubiertos.
+- Rebalanceo estimado (ventana 2026-10-07 18:00): **117 movimientos**, **594
+  bicis**, **≈22.6 %** del desabasto evitado.
+
+> Nota: estas cifras provienen de una corrida con `run_pipeline.py --full` sobre
+> datos reales descargados; la corrida por defecto usa datos de muestra.
 
 ## Recomendación de rebalanceo
 
