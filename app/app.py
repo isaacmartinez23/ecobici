@@ -32,11 +32,32 @@ from common.config import get_settings  # noqa: E402
 st.set_page_config(page_title="ECOBICI · Demanda y rebalanceo", page_icon="🚲", layout="wide")
 
 
+@st.cache_resource(show_spinner="Preparando datos de demostración (solo la primera vez)…")
+def _ensure_sample_data() -> str:
+    """Si no hay base (p. ej. en Streamlit Community Cloud), construye la muestra.
+
+    Localmente, si ya cargaste datos (muestra o histórico real), no hace nada.
+    En un despliegue limpio reconstruye el pipeline con los CSV de muestra
+    versionados, para que la app tenga algo que mostrar en el primer arranque.
+    """
+    if data.has_data():
+        return "listo"
+    from run_pipeline import run as run_pipeline
+
+    run_pipeline(sample=True)
+    return "construido"
+
+
 def main() -> None:
     settings = get_settings()
     st.title("🚲 " + settings.get("app", "title", default="ECOBICI"))
     st.caption("Dónde faltan bicicletas y a qué hora — pipeline reproducible de "
                "demanda, disponibilidad y rebalanceo.")
+
+    try:
+        _ensure_sample_data()
+    except Exception as exc:  # noqa: BLE001
+        st.error(f"No se pudieron preparar los datos de demostración: {exc}")
 
     if not data.has_data():
         st.warning(
