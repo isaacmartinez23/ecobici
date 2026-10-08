@@ -1,5 +1,5 @@
 url,file_name,year,month,discovered_at_utc,download_status,http_status,size_bytes,checksum_sha256,local_path,last_downloaded_at_utc
-https://ecobici.cdmx.gob.mx/wp-content/uploads/2022/06/2010-02-feb.csv,2010-02-feb.csv,2010,2,2026-09-18T03:43:30.181165,downloaded,200.0,73703.0,fffb424c918621393c9a6cecd8a3d4ce432f5b1828d5ad25e628b43baaa5bd5e,C:\Users\isaac\Desktop\ecobici\data\raw\2010-02-feb.csv,2026-09-18T03:45:17.904010
+https://ecobici.cdmx.gob.mx/wp-content/uploads/2022/06/2010-02-feb.csv,2010-02-feb.csv,2010,2,2026-09-18T03:43:30.181165,pending,,,,,
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2022/06/2010-03-mar.csv,2010-03-mar.csv,2010,3,2026-09-18T03:43:30.181165,pending,,,,,
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2022/06/2010-04-abr.csv,2010-04-abr.csv,2010,4,2026-09-18T03:43:30.181165,pending,,,,,
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2022/06/2010-05-may.csv,2010-05-may.csv,2010,5,2026-09-18T03:43:30.181165,pending,,,,,
@@ -197,3 +197,4 @@ https://ecobici.cdmx.gob.mx/wp-content/uploads/2026/06/2026-05.csv,2026-05.csv,2
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2026/07/public_data_web_2026-06.csv,public_data_web_2026-06.csv,2026,6,2026-09-18T03:43:30.181165,pending,,,,,
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2026/08/public_data_web_2026-07.csv,public_data_web_2026-07.csv,2026,7,2026-09-18T03:43:30.181165,pending,,,,,
 https://ecobici.cdmx.gob.mx/wp-content/uploads/2026/09/public_data_web_2026-08_2.csv,public_data_web_2026-08_2.csv,2026,8,2026-09-18T03:43:30.181165,pending,,,,,
+https://ecobici.cdmx.gob.mx/wp-content/uploads/2026/10/public_data_web_2026-09.csv,public_data_web_2026-09.csv,2026,9,2026-10-07T21:39:44.925913,pending,,,,,
